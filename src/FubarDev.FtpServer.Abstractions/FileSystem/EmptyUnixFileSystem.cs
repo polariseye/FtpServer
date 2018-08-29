@@ -57,11 +57,6 @@ namespace FubarDev.FtpServer.FileSystem
         }
 
         /// <inheritdoc/>
-        public void Dispose()
-        {
-        }
-
-        /// <inheritdoc/>
         public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
         {
             return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(new List<IUnixFileSystemEntry>());

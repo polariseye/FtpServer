@@ -26,7 +26,7 @@ namespace FubarDev.FtpServer
         private readonly string _address;
         private readonly int _port;
         private readonly IList<TcpListener> _listeners = new List<TcpListener>();
-        private readonly IList<Task<TcpClient>> _acceptors = new List<Task<TcpClient>>();
+        private readonly List<Task<TcpClient>> _acceptors = new List<Task<TcpClient>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiBindingTcpListener"/> class.
@@ -65,13 +65,15 @@ namespace FubarDev.FtpServer
                 .ToList();
             try
             {
-                Port = StartListening(addresses, _port);               
+                Port = StartListening(addresses, _port);
             }
             catch
             {
                 Stop();
                 throw;
             }
+
+            StartAccepting();
         }
 
         /// <summary>
@@ -89,33 +91,21 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Tries to get a listener that has pending client connections.
+        /// Start accepting the TCP clients.
         /// </summary>
-        /// <param name="listener">The listener that has pending client connections.</param>
-        /// <returns><c>true</c> when a listener with pending client connections could be found.</returns>
-        public bool TryGetPending(out TcpListener listener)
+        public void StartAccepting()
         {
-            foreach (var tcpListener in _listeners)
-            {
-                if (tcpListener.Pending())
-                {
-                    listener = tcpListener;
-                    return true;
-                }
-            }
-
-            listener = null;
-            return false;
+            _acceptors.AddRange(_listeners.Select(x => x.AcceptTcpClientAsync()));
         }
 
         /// <summary>
-        /// Wait for any client on all listeners
+        /// Wait for any client on all listeners.
         /// </summary>
-        /// <param name="token">Cancellation token</param>
-        /// <returns></returns>
+        /// <param name="token">Cancellation token.</param>
+        /// <returns>The task with the new TCP client.</returns>
         public Task<TcpClient> WaitAnyTcpClientAsync(CancellationToken token)
         {
-            var index=Task.WaitAny(_acceptors.ToArray(), token);
+            var index = Task.WaitAny(_acceptors.ToArray(), token);
             var retVal = _acceptors[index];
             _acceptors[index] = _listeners[index].AcceptTcpClientAsync();
             return retVal;
@@ -140,11 +130,6 @@ namespace FubarDev.FtpServer
             }
 
             return selectedPort;
-        }
-
-        public void StartAccepting()
-        {
-            _listeners.ToList().ForEach(x => _acceptors.Add(x.AcceptTcpClientAsync()));          
         }
     }
 }

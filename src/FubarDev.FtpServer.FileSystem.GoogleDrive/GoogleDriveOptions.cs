@@ -5,7 +5,7 @@
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
     /// <summary>
-    /// Options for the Google Drive-based file system
+    /// Options for the Google Drive-based file system.
     /// </summary>
     public class GoogleDriveOptions
     {

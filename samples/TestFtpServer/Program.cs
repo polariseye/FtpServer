@@ -115,7 +115,7 @@ namespace TestFtpServer
                     services => services
                         .AddOptions<DotNetFileSystemOptions>()
                         .Configure<IHostingEnvironment>((opt, env) => opt.RootPath = env.ContentRootPath))
-                .AddFtpServer(sb => Configure(sb).UseDotNetFileSystem());
+                .AddFtpServer(sb => Configure(sb, options).UseDotNetFileSystem());
             Run(builder);
         }
 
@@ -146,7 +146,7 @@ namespace TestFtpServer
             }
 
             var builder = CreateHostBuilder(options)
-                .AddFtpServer(sb => Configure(sb).UseGoogleDrive(credential));
+                .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
             Run(builder);
         }
 
@@ -164,7 +164,7 @@ namespace TestFtpServer
                 .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
 
             var builder = CreateHostBuilder(options)
-                .AddFtpServer(sb => Configure(sb).UseGoogleDrive(credential));
+                .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
             Run(builder);
         }
 

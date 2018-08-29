@@ -29,7 +29,6 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="AppeCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for.</param>
-        /// <param name="server">The FTP server.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         public AppeCommandHandler(
             [NotNull] IFtpConnection connection,

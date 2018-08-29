@@ -1,4 +1,4 @@
-// <copyright file="GoogleDriveFileSystem.cs" company="Fubar Development Junker">
+// <copyright file="GoogleDriveDirectFileSystem.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -47,12 +47,6 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <inheritdoc/>
         public DriveService Service { get; }
 
-        /// <inheritdoc />
-        void IGoogleDriveFileSystem.UploadFinished(string fileId)
-        {
-            // Nothing to do here...
-        }
-
         /// <inheritdoc/>
         public bool SupportsNonEmptyDirectoryDelete => true;
 
@@ -64,6 +58,12 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 
         /// <inheritdoc/>
         public bool SupportsAppend => false;
+
+        /// <inheritdoc />
+        void IGoogleDriveFileSystem.UploadFinished(string fileId)
+        {
+            // Nothing to do here...
+        }
 
         /// <inheritdoc/>
         public async Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(
@@ -435,36 +435,6 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             }
 
             /// <inheritdoc />
-            public override void Flush()
-            {
-                _innerStream.Flush();
-            }
-
-            /// <inheritdoc />
-            public override int Read(byte[] buffer, int offset, int count)
-            {
-                return _innerStream.Read(buffer, offset, count);
-            }
-
-            /// <inheritdoc />
-            public override long Seek(long offset, SeekOrigin origin)
-            {
-                return _innerStream.Seek(offset, origin);
-            }
-
-            /// <inheritdoc />
-            public override void SetLength(long value)
-            {
-                _innerStream.SetLength(value);
-            }
-
-            /// <inheritdoc />
-            public override void Write(byte[] buffer, int offset, int count)
-            {
-                _innerStream.Write(buffer, offset, count);
-            }
-
-            /// <inheritdoc />
             public override bool CanRead => _innerStream.CanRead;
 
             /// <inheritdoc />
@@ -496,6 +466,36 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             {
                 get => _innerStream.Position;
                 set => _innerStream.Position = value;
+            }
+
+            /// <inheritdoc />
+            public override void Flush()
+            {
+                _innerStream.Flush();
+            }
+
+            /// <inheritdoc />
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                return _innerStream.Read(buffer, offset, count);
+            }
+
+            /// <inheritdoc />
+            public override long Seek(long offset, SeekOrigin origin)
+            {
+                return _innerStream.Seek(offset, origin);
+            }
+
+            /// <inheritdoc />
+            public override void SetLength(long value)
+            {
+                _innerStream.SetLength(value);
+            }
+
+            /// <inheritdoc />
+            public override void Write(byte[] buffer, int offset, int count)
+            {
+                _innerStream.Write(buffer, offset, count);
             }
         }
     }

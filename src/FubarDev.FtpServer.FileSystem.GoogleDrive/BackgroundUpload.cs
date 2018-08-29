@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="file">The file to upload to.</param>
         /// <param name="tempData">The temporary data used to read from.</param>
         /// <param name="fileSystem">The file system that initiated this background upload.</param>
-        /// <param name="connection">The FTP connection this background upload belongs to</param>
+        /// <param name="connection">The FTP connection this background upload belongs to.</param>
         public BackgroundUpload(
             [NotNull] string fullPath,
             [NotNull] File file,

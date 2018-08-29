@@ -32,7 +32,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// </summary>
         /// <param name="serviceProvider">The google drive service provider.</param>
         /// <param name="temporaryDataFactory">The factory to create temporary data objects.</param>
-        /// <param name="options">Options for the Google Drive file system</param>
+        /// <param name="options">Options for the Google Drive file system.</param>
         public GoogleDriveFileSystemProvider(
             [NotNull] IGoogleDriveServiceProvider serviceProvider,
             [NotNull] ITemporaryDataFactory temporaryDataFactory,

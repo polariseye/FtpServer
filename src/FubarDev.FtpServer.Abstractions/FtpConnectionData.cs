@@ -28,7 +28,7 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="FtpConnectionData"/> class.
         /// </summary>
         /// <param name="backgroundCommandHandler">Utility module that allows background execution of an FTP command.</param>
-        /// <param name="owner">The owning FTP connection</param>
+        /// <param name="owner">The owning FTP connection.</param>
         public FtpConnectionData([NotNull] IBackgroundCommandHandler backgroundCommandHandler, IFtpConnection owner)
         {
             AuthenticatedFor = owner;
@@ -56,7 +56,7 @@ namespace FubarDev.FtpServer
         public IMembershipProvider AuthenticatedBy { get; set; }
 
         /// <summary>
-        /// Gets or sets the FTP connection this user was authenticated for.
+        /// Gets the FTP connection this user was authenticated for.
         /// </summary>
         public IFtpConnection AuthenticatedFor { get; }
 

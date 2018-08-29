@@ -20,9 +20,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         DriveService Service { get; }
 
         /// <summary>
-        /// Notification when the background upload for the given file is finished
+        /// Notification when the background upload for the given file is finished.
         /// </summary>
-        /// <param name="fileId">The file ID</param>
+        /// <param name="fileId">The file ID.</param>
         void UploadFinished(string fileId);
     }
 }
