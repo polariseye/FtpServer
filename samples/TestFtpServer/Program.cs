@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Xml;
 
 using FubarDev.FtpServer;
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
 
@@ -40,6 +41,22 @@ namespace TestFtpServer
             {
                 "usage: ftpserver [OPTIONS] <COMMAND> [COMMAND-OPTIONS]",
                 { "h|?|help", "Show help", v => options.ShowHelp = v != null },
+                "Authentication",
+                { "authentication=", "Sets the authentication (custom, anonymous)", v =>
+                    {
+                        switch (v)
+                        {
+                            case "custom":
+                                options.MembershipProviderType = MembershipProviderType.Custom;
+                                break;
+                            case "anonymous":
+                                options.MembershipProviderType = MembershipProviderType.Anonymous;
+                                break;
+                            default:
+                                throw new ApplicationException("Invalid authentication module");
+                        }
+                    }
+                },
                 "Server",
                 { "a|address=", "Sets the IP address or host name", v => options.ServerAddress = v },
                 { "p|port=", "Sets the listen port", v => options.Port = Convert.ToInt32(v) },
@@ -224,9 +241,20 @@ namespace TestFtpServer
             }
         }
 
-        private static IFtpServerBuilder Configure(IFtpServerBuilder builder)
+        private static IFtpServerBuilder Configure(IFtpServerBuilder builder, TestFtpServerOptions options)
         {
-            return builder.EnableAnonymousAuthentication();
+            switch (options.MembershipProviderType)
+            {
+                case MembershipProviderType.Anonymous:
+                    return builder.EnableAnonymousAuthentication();
+                case MembershipProviderType.Custom:
+                    builder.Services.AddSingleton<IMembershipProvider, CustomMembershipProvider>();
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unknown membership provider {options.MembershipProviderType}");
+            }
+
+            return builder;
         }
     }
 }

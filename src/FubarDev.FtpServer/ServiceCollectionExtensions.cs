@@ -31,6 +31,8 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services,
             [NotNull] Action<IFtpServerBuilder> configure)
         {
+            services.AddOptions();
+
             services.AddSingleton<FtpServer>();
             services.AddSingleton<IFtpServer>(sp => sp.GetRequiredService<FtpServer>());
             services.AddSingleton<IHostedService>(sp => sp.GetRequiredService<FtpServer>());

@@ -196,6 +196,7 @@ namespace FubarDev.FtpServer
                 try
                 {
                     await listener.StartAsync().ConfigureAwait(false);
+                    listener.StartAccepting();
 
                     Ready = true;
                     semaphore.Release();
@@ -204,17 +205,15 @@ namespace FubarDev.FtpServer
                     {
                         while (!Stopped && !_cancellationTokenSource.IsCancellationRequested)
                         {
-                            if (listener.TryGetPending(out var tcpListener))
-                            {
-                                var acceptTask = tcpListener.AcceptTcpClientAsync();
-                                acceptTask.Wait(_cancellationTokenSource.Token);
-                                var client = acceptTask.Result;
-                                AddClient(client);
-                                continue;
-                            }
-
-                            Thread.Sleep(0);
+                            var acceptTask = listener.WaitAnyTcpClientAsync(_cancellationTokenSource.Token);
+                            var client = acceptTask.Result;
+                            AddClient(client);
+                            continue;
                         }
+                    }
+                    catch(OperationCanceledException)
+                    {
+                        // Ignore - everything is fine
                     }
                     finally
                     {

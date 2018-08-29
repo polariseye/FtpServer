@@ -14,16 +14,17 @@ namespace FubarDev.FtpServer.BackgroundTransfer
     public interface IBackgroundTransferWorker
     {
         /// <summary>
-        /// Enqueue an entry for a background transfer (e.g. upload)
+        /// Enqueue an entry for a background transfer (e.g. upload).
         /// </summary>
-        /// <param name="backgroundTransfer">The background transfer to enqueue</param>
+        /// <param name="backgroundTransfer">The background transfer to enqueue.</param>
         void Enqueue([NotNull] IBackgroundTransfer backgroundTransfer);
 
         /// <summary>
         /// Get the status of all enqueued and active background transfers.
         /// </summary>
-        /// <returns>The status of all background transfers</returns>
-        [NotNull, ItemNotNull]
+        /// <returns>The status of all background transfers.</returns>
+        [NotNull]
+        [ItemNotNull]
         IReadOnlyCollection<BackgroundTransferInfo> GetStates();
     }
 }
