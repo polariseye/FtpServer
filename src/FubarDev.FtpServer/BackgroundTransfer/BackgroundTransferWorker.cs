@@ -13,12 +13,11 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
-    internal class BackgroundTransferWorker : IBackgroundTransferWorker, IHostedService, IDisposable
+    internal class BackgroundTransferWorker : IBackgroundTransferWorker, IDisposable, IFtpService
     {
         private readonly ManualResetEvent _event = new ManualResetEvent(false);
 

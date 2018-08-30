@@ -72,8 +72,6 @@ namespace FubarDev.FtpServer
                 Stop();
                 throw;
             }
-
-            StartAccepting();
         }
 
         /// <summary>

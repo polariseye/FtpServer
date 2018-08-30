@@ -15,7 +15,6 @@ using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -24,7 +23,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// The portable FTP server.
     /// </summary>
-    public sealed class FtpServer : IFtpServer, IDisposable, IHostedService
+    public sealed class FtpServer : IFtpServer, IDisposable, IFtpService
     {
         /// <summary>
         /// Mutex for Ready field.
@@ -208,7 +207,6 @@ namespace FubarDev.FtpServer
                             var acceptTask = listener.WaitAnyTcpClientAsync(_cancellationTokenSource.Token);
                             var client = acceptTask.Result;
                             AddClient(client);
-                            continue;
                         }
                     }
                     catch (OperationCanceledException)

@@ -23,6 +23,6 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="accountInformation">The account information to get the <see cref="IUnixFileSystem"/> for.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The Google Drive service and the root entry.</returns>
-        Task<(DriveService service, File rootEntry)> GetUserRootAsync([NotNull] IAccountInformation accountInformation, CancellationToken cancellationToken);
+        Task<GoogleDriveUserRoot> GetUserRootAsync([NotNull] IAccountInformation accountInformation, CancellationToken cancellationToken);
     }
 }

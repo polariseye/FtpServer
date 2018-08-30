@@ -60,7 +60,7 @@ namespace FubarDev.FtpServer
         [ItemNotNull]
         public IEnumerable<FtpCommand> Collect(byte[] buffer, int offset, int length)
         {
-            Debug.WriteLine("Collected data: {0}", string.Join(string.Empty, Enumerable.Range(offset, length).Select(x => buffer[x].ToString("X2"))));
+            Debug.WriteLine(string.Format("Collected data: {0}", string.Join(string.Empty, Enumerable.Range(offset, length).Select(x => buffer[x].ToString("X2")))));
 
             var commands = new List<FtpCommand>();
             commands.AddRange(_telnetInputParser.Collect(buffer, offset, length));

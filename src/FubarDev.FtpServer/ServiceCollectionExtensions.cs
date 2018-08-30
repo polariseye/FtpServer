@@ -11,8 +11,6 @@ using FubarDev.FtpServer.CommandHandlers;
 
 using JetBrains.Annotations;
 
-using Microsoft.Extensions.Hosting;
-
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -35,12 +33,12 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<FtpServer>();
             services.AddSingleton<IFtpServer>(sp => sp.GetRequiredService<FtpServer>());
-            services.AddSingleton<IHostedService>(sp => sp.GetRequiredService<FtpServer>());
+            services.AddSingleton<IFtpService>(sp => sp.GetRequiredService<FtpServer>());
 
             services.AddSingleton<ITemporaryDataFactory, TemporaryDataFactory>();
             services.AddSingleton<BackgroundTransferWorker>();
             services.AddSingleton<IBackgroundTransferWorker>(sp => sp.GetRequiredService<BackgroundTransferWorker>());
-            services.AddSingleton<IHostedService>(sp => sp.GetRequiredService<BackgroundTransferWorker>());
+            services.AddSingleton<IFtpService>(sp => sp.GetRequiredService<BackgroundTransferWorker>());
 
             services.AddScoped<IFtpConnectionAccessor, FtpConnectionAccessor>();
             services.AddScoped<TcpSocketClientAccessor>();

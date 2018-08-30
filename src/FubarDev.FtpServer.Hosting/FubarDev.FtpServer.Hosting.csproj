@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Description>ASP.NET Core hosting glue for the portable FTP server</Description>
+    <PackageTags>portable;FTP;server;hosting</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="2.1.0"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FubarDev.FtpServer\FubarDev.FtpServer.csproj"/>
+  </ItemGroup>
+
+  <Import Project="../../PackageLibrary.props"/>
+
+</Project>

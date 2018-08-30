@@ -5,6 +5,7 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>ftpserver</AssemblyName>
     <IsPackable>false</IsPackable>
+	<RootNamespace>TestFtpServer</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.1.0" />
@@ -16,7 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj" />
-    <ProjectReference Include="..\..\src\FubarDev.FtpServer\FubarDev.FtpServer.csproj" />
+    <ProjectReference Include="..\..\src\FubarDev.FtpServer.Hosting\FubarDev.FtpServer.Hosting.csproj" />
   </ItemGroup>
   <Import Project="../../Global.props" />
   <ItemGroup>
@@ -29,4 +30,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <Import Project="..\TestFtpServer.Shared\TestFtpServer.Shared.projitems" Label="Shared" />
 </Project>

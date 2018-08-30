@@ -27,14 +27,14 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc />
-        public Task<(DriveService service, File rootEntry)> GetUserRootAsync(IAccountInformation accountInformation, CancellationToken cancellationToken)
+        public Task<GoogleDriveUserRoot> GetUserRootAsync(IAccountInformation accountInformation, CancellationToken cancellationToken)
         {
             var rootEntry = new File()
             {
                 Id = "root",
             };
 
-            return Task.FromResult((_driveService, rootEntry));
+            return Task.FromResult(new GoogleDriveUserRoot(_driveService, rootEntry));
         }
     }
 }

@@ -399,28 +399,72 @@ namespace FubarDev.FtpServer
             }
         }
 
-        private Tuple<FtpCommand, IFtpCommandBase, bool> FindCommandHandler(FtpCommand command)
+        private CommandSearchResult FindCommandHandler(FtpCommand command)
         {
             if (!CommandHandlers.TryGetValue(command.Name, out var handler))
             {
                 return null;
             }
 
-            var extensionHost = handler as IFtpCommandHandlerExtensionHost;
-            if (!string.IsNullOrWhiteSpace(command.Argument) && extensionHost != null)
+            if (!string.IsNullOrWhiteSpace(command.Argument) && handler is IFtpCommandHandlerExtensionHost extensionHost)
             {
                 var extensionCommand = FtpCommand.Parse(command.Argument);
                 if (extensionHost.Extensions.TryGetValue(extensionCommand.Name, out var extension))
                 {
-                    return Tuple.Create(extensionCommand, (IFtpCommandBase)extension, extension.IsLoginRequired ?? handler.IsLoginRequired);
+                    return new CommandSearchResult(extensionCommand, extension, extension.IsLoginRequired ?? handler.IsLoginRequired);
                 }
             }
-            return Tuple.Create(command, (IFtpCommandBase)handler, handler.IsLoginRequired);
+
+            return new CommandSearchResult(command, handler, handler.IsLoginRequired);
         }
 
         private void OnClosed()
         {
             Closed?.Invoke(this, new EventArgs());
+        }
+
+        /// <summary>
+        /// Result of a search for a command handle for the given command.
+        /// </summary>
+        private class CommandSearchResult
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="CommandSearchResult"/> class.
+            /// </summary>
+            /// <param name="command">The command to be processed.</param>
+            /// <param name="commandHandler">The matching command handler.</param>
+            /// <param name="isLogInRequired">Determines whether a logged-in user is required.</param>
+            public CommandSearchResult(FtpCommand command, IFtpCommandBase commandHandler, bool isLogInRequired)
+            {
+                Command = command;
+                CommandHandler = commandHandler;
+                IsLogInRequired = isLogInRequired;
+            }
+
+            /// <summary>
+            /// Gets the command to handle.
+            /// </summary>
+            public FtpCommand Command { get; }
+
+            /// <summary>
+            /// Gets the command handler.
+            /// </summary>
+            public IFtpCommandBase CommandHandler { get; }
+
+            /// <summary>
+            /// Gets a value indicating whether the command requires a logged-in user.
+            /// </summary>
+            public bool IsLogInRequired { get; }
+
+            public void Deconstruct(
+                out FtpCommand ftpCommand,
+                out IFtpCommandBase commandHandler,
+                out bool isLogInRequired)
+            {
+                ftpCommand = Command;
+                commandHandler = CommandHandler;
+                isLogInRequired = IsLogInRequired;
+            }
         }
     }
 }

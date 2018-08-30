@@ -1,4 +1,4 @@
-// <copyright file="Program.cs" company="Fubar Development Junker">
+// <copyright file="FtpServerApp.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -14,26 +14,21 @@ using System.Xml;
 
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
-using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
 
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Mono.Options;
 
-using NLog.Extensions.Logging;
-
 namespace TestFtpServer
 {
-    internal static class Program
+    public abstract class FtpServerApp
     {
-        private static int Main(string[] args)
+        public int Run(string[] args)
         {
             var options = new TestFtpServerOptions();
 
@@ -104,100 +99,7 @@ namespace TestFtpServer
             return optionSet.Run(args);
         }
 
-        private static void RunWithFileSystem(string[] args, TestFtpServerOptions options)
-        {
-            options.Validate();
-            var rootDir =
-                args.Length != 0 ? args[0] : Path.Combine(Path.GetTempPath(), "TestFtpServer");
-            var builder = CreateHostBuilder(options)
-                .UseContentRoot(rootDir)
-                .ConfigureServices(
-                    services => services
-                        .AddOptions<DotNetFileSystemOptions>()
-                        .Configure<IHostingEnvironment>((opt, env) => opt.RootPath = env.ContentRootPath))
-                .AddFtpServer(sb => Configure(sb, options).UseDotNetFileSystem());
-            Run(builder);
-        }
-
-        private static async Task RunWithGoogleDriveUser(string[] args, TestFtpServerOptions options)
-        {
-            options.Validate();
-            if (args.Length != 2)
-            {
-                throw new Exception("This command requires two arguments: <CLIENT-SECRETS-FILE> <USERNAME>");
-            }
-
-            var clientSecretsFile = args[0];
-            var userName = args[1];
-
-            UserCredential credential;
-            using (var secretsSource = new FileStream(clientSecretsFile, FileMode.Open))
-            {
-                var secrets = GoogleClientSecrets.Load(secretsSource);
-                credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    secrets.Secrets,
-                    new[] { DriveService.Scope.DriveFile, DriveService.Scope.Drive },
-                    userName,
-                    CancellationToken.None);
-                if (options.RefreshToken)
-                {
-                    await credential.RefreshTokenAsync(CancellationToken.None);
-                }
-            }
-
-            var builder = CreateHostBuilder(options)
-                .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
-            Run(builder);
-        }
-
-        private static void RunWithGoogleDriveService(string[] args, TestFtpServerOptions options)
-        {
-            options.Validate();
-            if (args.Length != 1)
-            {
-                throw new Exception("This command requires one argument: <SERVICE-CREDENTIAL-FILE>");
-            }
-
-            var serviceCredentialFile = args[0];
-            var credential = GoogleCredential
-                .FromFile(serviceCredentialFile)
-                .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
-
-            var builder = CreateHostBuilder(options)
-                .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
-            Run(builder);
-        }
-
-        private static void Run(IHostBuilder hostBuilder)
-        {
-            try
-            {
-                hostBuilder.RunConsoleAsync().Wait();
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine(ex);
-            }
-        }
-
-        private static IHostBuilder CreateHostBuilder(TestFtpServerOptions options)
-        {
-            NLog.LogManager.LoadConfiguration("NLog.config");
-
-            return new HostBuilder()
-                .ConfigureLogging(
-                    lb => lb
-                        .SetMinimumLevel(LogLevel.Trace)
-                        .AddNLog(
-                            new NLogProviderOptions
-                            {
-                                CaptureMessageTemplates = true,
-                                CaptureMessageProperties = true
-                            }))
-                .ConfigureServices(services => Configure(services, options));
-        }
-
-        private static void Configure(IServiceCollection services, TestFtpServerOptions options)
+        protected static void Configure(IServiceCollection services, TestFtpServerOptions options)
         {
             services
                 .AddOptions()
@@ -219,7 +121,7 @@ namespace TestFtpServer
                         opt.Port = options.GetPort();
                     })
                 .Configure<GoogleDriveOptions>(
-                    opt => { opt.UseDirectUpload = options.UseDirectUpload; });
+                    opt => opt.UseDirectUpload = options.UseDirectUpload);
 
             if (options.ImplicitFtps)
             {
@@ -241,7 +143,7 @@ namespace TestFtpServer
             }
         }
 
-        private static IFtpServerBuilder Configure(IFtpServerBuilder builder, TestFtpServerOptions options)
+        protected static IFtpServerBuilder Configure(IFtpServerBuilder builder, TestFtpServerOptions options)
         {
             switch (options.MembershipProviderType)
             {
@@ -255,6 +157,67 @@ namespace TestFtpServer
             }
 
             return builder;
+        }
+
+        protected abstract void RunWithFileSystem(string rootDir, TestFtpServerOptions options);
+
+        protected abstract void RunWithGoogleDriveUser(UserCredential credential, TestFtpServerOptions options);
+
+        protected abstract void RunWithGoogleDriveService(GoogleCredential credential, TestFtpServerOptions options);
+
+        private void RunWithFileSystem(string[] args, TestFtpServerOptions options)
+        {
+            options.Validate();
+            var rootDir =
+                args.Length != 0 ? args[0] : Path.Combine(Path.GetTempPath(), "TestFtpServer");
+            RunWithFileSystem(rootDir, options);
+        }
+
+        private async Task RunWithGoogleDriveUser(string[] args, TestFtpServerOptions options)
+        {
+            options.Validate();
+            if (args.Length != 2)
+            {
+                throw new Exception("This command requires two arguments: <CLIENT-SECRETS-FILE> <USERNAME>");
+            }
+
+            var clientSecretsFile = args[0];
+            var userName = args[1];
+
+            UserCredential credential;
+            using (var secretsSource = new FileStream(clientSecretsFile, FileMode.Open))
+            {
+                var secrets = GoogleClientSecrets.Load(secretsSource);
+                credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                        secrets.Secrets,
+                        new[] { DriveService.Scope.DriveFile, DriveService.Scope.Drive },
+                        userName,
+                        CancellationToken.None)
+                    .ConfigureAwait(false);
+                if (options.RefreshToken)
+                {
+                    await credential.RefreshTokenAsync(CancellationToken.None)
+                        .ConfigureAwait(false);
+                }
+            }
+
+            RunWithGoogleDriveUser(credential, options);
+        }
+
+        private void RunWithGoogleDriveService(string[] args, TestFtpServerOptions options)
+        {
+            options.Validate();
+            if (args.Length != 1)
+            {
+                throw new Exception("This command requires one argument: <SERVICE-CREDENTIAL-FILE>");
+            }
+
+            var serviceCredentialFile = args[0];
+            var credential = GoogleCredential
+                .FromFile(serviceCredentialFile)
+                .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
+
+            RunWithGoogleDriveService(credential, options);
         }
     }
 }

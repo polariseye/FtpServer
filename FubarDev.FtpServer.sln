@@ -19,8 +19,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSyst
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{7004709E-5C0D-4D3E-AF27-89968FA47C19}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFtpServer", "samples\TestFtpServer\TestFtpServer.csproj", "{4DFC0694-0212-491C-A102-38203A74B09F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Tests", "test\FubarDev.FtpServer.Tests\FubarDev.FtpServer.Tests.csproj", "{0EEB524B-D0F7-4972-838D-D4CE7963D839}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Abstractions", "src\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj", "{37CE4218-FAC3-4201-82A0-54945698C6AD}"
@@ -33,7 +31,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B0D91078-F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Commands", "src\FubarDev.FtpServer.Commands\FubarDev.FtpServer.Commands.csproj", "{7E3F81E2-764E-4075-992F-E53BF50F9623}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Hosting", "src\FubarDev.FtpServer.Hosting\FubarDev.FtpServer.Hosting.csproj", "{DD4198CD-1157-4913-839C-6D5BF68B0047}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFtpServer.AspNetCoreHosting", "samples\TestFtpServer.AspNetCoreHosting\TestFtpServer.AspNetCoreHosting.csproj", "{C4373984-9566-45CD-9E27-5838EE60CEDD}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TestFtpServer.Shared", "samples\TestFtpServer.Shared\TestFtpServer.Shared.shproj", "{91D0A5B7-1C5F-49C8-832C-2AEDBEED2BE2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFtpServer.NetFxConsole", "samples\TestFtpServer.NetFxConsole\TestFtpServer.NetFxConsole.csproj", "{02798D95-03A4-461D-9345-4DD6E5291447}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		samples\TestFtpServer.Shared\TestFtpServer.Shared.projitems*{02798d95-03a4-461d-9345-4dd6e5291447}*SharedItemsImports = 4
+		samples\TestFtpServer.Shared\TestFtpServer.Shared.projitems*{91d0a5b7-1c5f-49c8-832c-2aedbeed2be2}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -47,10 +57,6 @@ Global
 		{9A83C6F5-378B-48B3-B32A-151DB90B390C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A83C6F5-378B-48B3-B32A-151DB90B390C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A83C6F5-378B-48B3-B32A-151DB90B390C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4DFC0694-0212-491C-A102-38203A74B09F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4DFC0694-0212-491C-A102-38203A74B09F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4DFC0694-0212-491C-A102-38203A74B09F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4DFC0694-0212-491C-A102-38203A74B09F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -67,6 +73,18 @@ Global
 		{7E3F81E2-764E-4075-992F-E53BF50F9623}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E3F81E2-764E-4075-992F-E53BF50F9623}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E3F81E2-764E-4075-992F-E53BF50F9623}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD4198CD-1157-4913-839C-6D5BF68B0047}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD4198CD-1157-4913-839C-6D5BF68B0047}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD4198CD-1157-4913-839C-6D5BF68B0047}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD4198CD-1157-4913-839C-6D5BF68B0047}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4373984-9566-45CD-9E27-5838EE60CEDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4373984-9566-45CD-9E27-5838EE60CEDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4373984-9566-45CD-9E27-5838EE60CEDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4373984-9566-45CD-9E27-5838EE60CEDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02798D95-03A4-461D-9345-4DD6E5291447}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02798D95-03A4-461D-9345-4DD6E5291447}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02798D95-03A4-461D-9345-4DD6E5291447}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02798D95-03A4-461D-9345-4DD6E5291447}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,11 +92,14 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{01EBBF94-7469-43A0-A618-07FB734B163F} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{9A83C6F5-378B-48B3-B32A-151DB90B390C} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
-		{4DFC0694-0212-491C-A102-38203A74B09F} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839} = {B0D91078-FA02-4ADD-8EDE-831243BE9794}
 		{37CE4218-FAC3-4201-82A0-54945698C6AD} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{474BD381-5B80-4580-BFB1-D41BEB70C458} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{7E3F81E2-764E-4075-992F-E53BF50F9623} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
+		{DD4198CD-1157-4913-839C-6D5BF68B0047} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
+		{C4373984-9566-45CD-9E27-5838EE60CEDD} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
+		{91D0A5B7-1C5F-49C8-832C-2AEDBEED2BE2} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
+		{02798D95-03A4-461D-9345-4DD6E5291447} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}
