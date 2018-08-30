@@ -39,10 +39,15 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "TestFtpServer.Shared", "sam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFtpServer.NetFxConsole", "samples\TestFtpServer.NetFxConsole\TestFtpServer.NetFxConsole.csproj", "{02798D95-03A4-461D-9345-4DD6E5291447}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "third-party", "third-party", "{AECBCA04-7A8C-4BE8-8FFA-39D8CE4B68DF}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DotNet.Glob", "third-party\DotNet.Glob\DotNet.Glob.shproj", "{A45290B4-20F7-48E9-8543-C69240BFB9F8}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		samples\TestFtpServer.Shared\TestFtpServer.Shared.projitems*{02798d95-03a4-461d-9345-4dd6e5291447}*SharedItemsImports = 4
 		samples\TestFtpServer.Shared\TestFtpServer.Shared.projitems*{91d0a5b7-1c5f-49c8-832c-2aedbeed2be2}*SharedItemsImports = 13
+		third-party\DotNet.Glob\DotNet.Glob.projitems*{a45290b4-20f7-48e9-8543-c69240bfb9f8}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -100,6 +105,7 @@ Global
 		{C4373984-9566-45CD-9E27-5838EE60CEDD} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
 		{91D0A5B7-1C5F-49C8-832C-2AEDBEED2BE2} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
 		{02798D95-03A4-461D-9345-4DD6E5291447} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
+		{A45290B4-20F7-48E9-8543-C69240BFB9F8} = {AECBCA04-7A8C-4BE8-8FFA-39D8CE4B68DF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}
