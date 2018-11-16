@@ -48,7 +48,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var argument = FtpCommand.Parse(command.Argument);
+            var argument = FtpCommand.Parse(command.Connection, command.Argument);
             if (!Extensions.TryGetValue(argument.Name, out var extension))
             {
                 return new FtpResponse(500, "Syntax error, command unrecognized.");

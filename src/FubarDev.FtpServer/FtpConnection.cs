@@ -278,7 +278,7 @@ namespace FubarDev.FtpServer
                 try
                 {
                     Task<int> readTask = null;
-                    for (; ;)
+                    for (; ; )
                     {
                         if (readTask == null)
                         {
@@ -313,7 +313,7 @@ namespace FubarDev.FtpServer
                                 break;
                             }
 
-                            var commands = collector.Collect(buffer, 0, bytesRead);
+                            var commands = collector.Collect(this, buffer, 0, bytesRead);
                             foreach (var command in commands)
                             {
                                 await ProcessMessage(command).ConfigureAwait(false);
@@ -411,7 +411,7 @@ namespace FubarDev.FtpServer
             var extensionHost = handler as IFtpCommandHandlerExtensionHost;
             if (!string.IsNullOrWhiteSpace(command.Argument) && extensionHost != null)
             {
-                var extensionCommand = FtpCommand.Parse(command.Argument);
+                var extensionCommand = FtpCommand.Parse(command.Connection, command.Argument);
                 if (extensionHost.Extensions.TryGetValue(extensionCommand.Name, out var extension))
                 {
                     return Tuple.Create(extensionCommand, (IFtpCommandBase)extension, extension.IsLoginRequired ?? handler.IsLoginRequired);

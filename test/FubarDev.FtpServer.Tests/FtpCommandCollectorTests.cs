@@ -33,7 +33,7 @@ namespace FubarDev.FtpServer.Tests
             }
 
             Assert.Equal(
-                new[] { new FtpCommand("USER", "anonymous") },
+                new[] { new FtpCommand(null, "USER", "anonymous") },
                 commands,
                 new FtpCommandComparer());
         }
@@ -198,12 +198,12 @@ namespace FubarDev.FtpServer.Tests
             }
         }
 
-        private static IEnumerable<FtpCommand> Collect(FtpCommandCollector collector, string data)
+        private static IEnumerable<FtpCommand> Collect(IFtpConnection connection, FtpCommandCollector collector, string data)
         {
             var temp = collector.Encoding.GetBytes(data);
             foreach (var escapedData in EscapeIAC(temp).Select(x => x.Span.ToArray()))
             {
-                var collected = collector.Collect(escapedData, 0, escapedData.Length);
+                var collected = collector.Collect(connection, escapedData, 0, escapedData.Length);
                 foreach (var command in collected)
                 {
                     yield return command;

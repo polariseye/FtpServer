@@ -52,18 +52,19 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Collects the data from the <paramref name="buffer"/> and tries to build <see cref="FtpCommand"/> objects from it.
         /// </summary>
+        /// <param name="connection">连接对象</param>
         /// <param name="buffer">The buffer to collect the data from.</param>
         /// <param name="offset">An offset into the buffer to collect the data from.</param>
         /// <param name="length">The length of the data to collect.</param>
         /// <returns>The found <see cref="FtpCommand"/>s.</returns>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<FtpCommand> Collect(byte[] buffer, int offset, int length)
+        public IEnumerable<FtpCommand> Collect(IFtpConnection connection, byte[] buffer, int offset, int length)
         {
             Debug.WriteLine("Collected data: {0}", string.Join(string.Empty, Enumerable.Range(offset, length).Select(x => buffer[x].ToString("X2"))));
 
             var commands = new List<FtpCommand>();
-            commands.AddRange(_telnetInputParser.Collect(buffer, offset, length));
+            commands.AddRange(_telnetInputParser.Collect(connection, buffer, offset, length));
             return commands;
         }
 
@@ -76,7 +77,7 @@ namespace FubarDev.FtpServer
 
         [NotNull]
         [ItemNotNull]
-        private IEnumerable<FtpCommand> InternalCollect(byte[] buffer, int offset, int length)
+        private IEnumerable<FtpCommand> InternalCollect(IFtpConnection connection, byte[] buffer, int offset, int length)
         {
             var commands = new List<FtpCommand>();
 
@@ -106,7 +107,7 @@ namespace FubarDev.FtpServer
                     Array.Copy(buffer, offset, data, previousData.Length, carriageReturnPos - offset);
                 }
 
-                commands.Add(CreateFtpCommand(data));
+                commands.Add(CreateFtpCommand(connection, data));
 
                 var copyLength = carriageReturnPos - offset;
                 offset += copyLength + 1;
@@ -146,10 +147,10 @@ namespace FubarDev.FtpServer
             return commands;
         }
 
-        private FtpCommand CreateFtpCommand(byte[] command)
+        private FtpCommand CreateFtpCommand(IFtpConnection connection, byte[] command)
         {
             var message = Encoding.GetString(command, 0, command.Length);
-            return FtpCommand.Parse(message);
+            return FtpCommand.Parse(connection, message);
         }
 
         private class FtpTelnetInputParser : TelnetInputParser<FtpCommand>
@@ -161,9 +162,9 @@ namespace FubarDev.FtpServer
                 _collector = collector;
             }
 
-            protected override IEnumerable<FtpCommand> DataReceived(byte[] data, int offset, int length)
+            protected override IEnumerable<FtpCommand> DataReceived(IFtpConnection connection, byte[] data, int offset, int length)
             {
-                return _collector.InternalCollect(data, offset, length);
+                return _collector.InternalCollect(connection, data, offset, length);
             }
         }
     }

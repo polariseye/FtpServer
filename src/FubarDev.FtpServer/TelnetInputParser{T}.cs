@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer
         /// <param name="offset">The offset into the data buffer.</param>
         /// <param name="length">The length of the data to read from the data buffer.</param>
         /// <returns>The list of items found inside the collected data.</returns>
-        public IReadOnlyList<T> Collect(byte[] data, int offset, int length)
+        public IReadOnlyList<T> Collect(IFtpConnection connection, byte[] data, int offset, int length)
         {
             var result = new List<T>();
             var endOffset = offset + length;
@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer
                             break;
                         case 0xFF:
                             // Double-Escape
-                            result.AddRange(DataReceived(data, index, length: 1));
+                            result.AddRange(DataReceived(connection, data, index, length: 1));
                             break;
                         default:
                             Debug.WriteLine("TELNET: Unknown command received - skipping 0xFF");
@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer
                     var dataLength = index - dataOffset;
                     if (dataLength != 0)
                     {
-                        result.AddRange(DataReceived(data, dataOffset, dataLength));
+                        result.AddRange(DataReceived(connection, data, dataOffset, dataLength));
                     }
 
                     _interpretAsCommandReceived = true;
@@ -70,7 +70,7 @@ namespace FubarDev.FtpServer
                 var dataLength = endOffset - dataOffset;
                 if (dataLength != 0)
                 {
-                    result.AddRange(DataReceived(data, dataOffset, dataLength));
+                    result.AddRange(DataReceived(connection, data, dataOffset, dataLength));
                 }
             }
             return result;
@@ -83,7 +83,7 @@ namespace FubarDev.FtpServer
         /// <param name="offset">The offset into the data buffer.</param>
         /// <param name="length">The length of the data to be collected.</param>
         /// <returns>The collected items.</returns>
-        protected abstract IEnumerable<T> DataReceived(byte[] data, int offset, int length);
+        protected abstract IEnumerable<T> DataReceived(IFtpConnection connection, byte[] data, int offset, int length);
 
         /// <summary>
         /// Handles the <code>Synch</code> command.
