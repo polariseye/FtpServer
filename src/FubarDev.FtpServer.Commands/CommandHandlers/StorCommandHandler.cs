@@ -74,11 +74,12 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             return await Connection
                 .SendResponseAsync(
-                    client => ExecuteSendAsync(client, doReplace, fileInfo, restartPosition, cancellationToken))
+                    client => ExecuteSendAsync(fileName, client, doReplace, fileInfo, restartPosition, cancellationToken))
                 .ConfigureAwait(false);
         }
 
         private async Task<FtpResponse> ExecuteSendAsync(
+            string localFileName,
             TcpClient responseSocket,
             bool doReplace,
             SearchResult<IUnixFileEntry> fileInfo,
